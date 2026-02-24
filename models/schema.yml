@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: mart_property_core
+    description: "Core property entity - Silver Pre-MDM layer. One row per property per source system."
+    
+  
+    tests:
+      - dbt_utils.expression_is_true:
+          name: property_core_gross_area_gt_zero
+          expression: "gross_area > 0"
+      - dbt_utils.expression_is_true:
+          name: property_core_year_built_range
+          expression: "year_built >= 1600 AND year_built <= EXTRACT(YEAR FROM CURRENT_DATE)"
+
+ 
+    columns:
+      - name: property_core_skey
+        description: "Surrogate key"
+        tests:
+          - not_null
+          - unique
+
+      - name: source_property_id
+        description: "Original property identifier from source system"
+        tests:
+          - not_null
+
+      - name: parcel_number
+        description: "Primary parcel identifier"
+        tests:
+          - not_null
+
+      - name: gross_area_uom
+        description: "Unit of measure for gross area"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['SF','SM','ACRES'] 
+
+      - name: property_core_hkey
+        description: "MD5 hash key of business attributes"
+        tests:
+          - not_null
+          - unique
+
+      - name: source_unique_id
+        description: "Composite identifier SOURCE_SYSTEM|SOURCE_PROPERTY_ID"
+        tests:
+          - not_null
+          - unique
+
+      - name: gdp_is_active
+        description: "Soft delete indicator"
+        tests:
+          - not_null
+
+      - name: gdp_inserted_ts
+        description: "Insert timestamp"
+        tests:
+          - not_null
+
+      - name: gdp_updated_ts
+        description: "Update timestamp"
+        tests:
+          - not_null

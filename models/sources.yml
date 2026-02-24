@@ -1,0 +1,11 @@
+sources:
+  - name: bronze_lightbox
+    database: DEV_GDP_BRONZE_DB
+    schema: lightbox
+    tables:
+      - name: building
+      - name: assessment
+      - name: address
+      - name: building_assessment_relation
+      - name: address_assessment_relation
+        
