@@ -1,4 +1,3 @@
-{{ config(materialized='view') }}
 
 select
     address_lid,
