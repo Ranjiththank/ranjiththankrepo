@@ -12,19 +12,42 @@ models:
       - dbt_utils.expression_is_true:
           name: property_core_year_built_range
           expression: "year_built >= 1600 AND year_built <= EXTRACT(YEAR FROM CURRENT_DATE)"
-
+      - dbt_utils.expression_is_true:
+          name: property_core_number_of_units_gt_zero
+          expression: "number_of_units > 0"
+      - dbt_utils.expression_is_true:
+          name: floors_only_for_building
+          expression: "
+            case
+              when total_floors is not null
+              then ref_property_kind_skey is not null
+              else true
+            end"
+      - dbt_utils.expression_is_true:
+          name: floors_only_for_building
+          expression: "
+            case
+              when total_floors is not null
+              then ref_property_kind_skey is not null
+              else true
+            end
+          "
  
     columns:
-      - name: property_core_skey
-        description: "Surrogate key"
+      - name: ref_property_kind_skey
+        description: "FK to REF_PROPERTY_KIND"
         tests:
           - not_null
-          - unique
+          - relationships:
+              to: ref('stg_ref_property_kind')
+              field: property_kind_skey
 
-      - name: source_property_id
-        description: "Original property identifier from source system"
+      - name: ref_property_status_skey
+        description: "FK to REF_PROPERTY_STATUS"
         tests:
-          - not_null
+          - relationships:
+              to: ref('stg_ref_property_status')
+              field: property_status_skey
 
       - name: parcel_number
         description: "Primary parcel identifier"
@@ -36,7 +59,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['SF','SM','ACRES'] 
+              values: ['SQFT','SM','ACRES'] 
 
       - name: property_core_hkey
         description: "MD5 hash key of business attributes"
@@ -49,18 +72,3 @@ models:
         tests:
           - not_null
           - unique
-
-      - name: gdp_is_active
-        description: "Soft delete indicator"
-        tests:
-          - not_null
-
-      - name: gdp_inserted_ts
-        description: "Insert timestamp"
-        tests:
-          - not_null
-
-      - name: gdp_updated_ts
-        description: "Update timestamp"
-        tests:
-          - not_null

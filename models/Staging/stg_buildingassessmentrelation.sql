@@ -1,4 +1,3 @@
-{{ config(materialized='view') }}
 
 select
     building_lid,

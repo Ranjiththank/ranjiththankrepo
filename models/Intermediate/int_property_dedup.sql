@@ -1,18 +1,22 @@
-{{ config(materialized='table') }}
+
 
 with ranked as (
 
-    select *,
+    select
+        *,
         row_number() over (
             partition by primary_parcel_lid
             order by
                 asmt_year desc,
-                area_sqft desc
+                building_sqft desc
         ) as rn
+
     from {{ ref('int_property_joined') }}
 
 )
 
-select *
+select
+    *
+
 from ranked
 where rn = 1

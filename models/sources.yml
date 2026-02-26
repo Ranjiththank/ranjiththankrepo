@@ -8,4 +8,7 @@ sources:
       - name: address
       - name: building_assessment_relation
       - name: address_assessment_relation
+      - name: REF_PROPERTY_KIND
+      - name: REF_PROPERTY_STATUS
+      - name: REF_GDP_SOURCE_SYSTEM
         
